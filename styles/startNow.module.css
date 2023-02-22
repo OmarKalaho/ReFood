@@ -1,0 +1,99 @@
+.boxContainer {
+  width: 100%;
+  position: relative;
+  display: flex;
+  gap: 2rem;
+  margin-top: 20vh;
+  height: max-content;
+  flex-wrap: wrap;
+  margin-bottom: 4vh;
+}
+.button {
+  border-radius: 20px;
+  padding: 1.7em;
+  flex: 1 0 0;
+  flex-direction: column;
+  text-transform: none;
+  box-shadow: 2px 2px 4px 3px rgb(191, 199, 123);
+}
+.overlayR {
+  margin-top: 1em;
+  align-self: flex-start;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  background-color: darkolivegreen;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 0;
+  height: 1.3rem;
+  transition: 1s ease-in-out;
+}
+
+.overlayL {
+  margin-top: 1em;
+  align-self: flex-start;
+  border-radius: 10px;
+  position: relative;
+  bottom: 0;
+  left: 100%;
+  right: 0;
+  background-color: darkolivegreen;
+  overflow: hidden;
+  width: 0;
+  height: 1.3rem;
+  transition: 1s ease-in-out;
+}
+.button:hover {
+  box-shadow: 0px 0px 1px 0px rgb(167, 175, 95);
+  background-color: white;
+  transition: 1s ease;
+}
+
+.button:hover .overlayR {
+  width: 100%;
+}
+
+.button:hover .overlayL {
+  width: 100%;
+  left: 0;
+}
+.h1 {
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.p {
+  margin-top: 2%;
+  color: darkslategray;
+  font-size: 1.2rem;
+  letter-spacing: 1.2px;
+  line-height: 25px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+  .button {
+    flex: 1 0 100%;
+    margin-bottom: 2vh;
+  }
+  .h1 {
+    font-size: 2rem;
+  }
+  .boxContainer {
+    margin-top: 10vh;
+  }
+}
+@media (min-width: 601px) and (max-width: 991px) {
+  .boxContainer {
+    gap: 3rem;
+    margin-top: 13vh;
+  }
+  .button {
+    flex: 0 1 80%;
+    margin: auto;
+  }
+  .h1 {
+    font-size: 1.9rem;
+  }
+}

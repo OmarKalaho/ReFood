@@ -1,0 +1,116 @@
+{
+    "User": [
+        {
+            "id": 1,
+            "type": "donator",
+            "firstName": "Omar",
+            "lastName": "Kalaho",
+            "organizationName": "",
+            "email": "omar.kalaho@gmail.com",
+            "phoneNumber": "0931676657",
+            "password": "omar123",
+            "addresses": [
+                {
+                    "_id": 1,
+                    "addressName": "Home",
+                    "buildingNo": 150,
+                    "streetName": "Abu Mehjan Al Thaqafi",
+                    "area": "Tanzeem Kafarsouseh",
+                    "city": "Damascus",
+                    "country": "Syria",
+                    "gmap": {
+                        "long": 23,
+                        "lat": 434
+                    }
+                }
+            ]
+        }
+    ],
+    "GiveAway": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "foodStatus": "Edibale",
+            "quantity": 50,
+            "unit": "KG",
+            "userAddressId": 1,
+            "date": "12/02/2023",
+            "pickupTime": "13/02/2023 10:00 PM",
+            "remarks": "No Remarks",
+            "status": "Accepted",
+            "acceptanceDetails": {
+                "organizationName": "Hefez Al Nemah Charity",
+                "courierName": "Jad Hadaya",
+                "courierNumber": "0954761859"
+            }
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "foodStatus": "Edibale",
+            "quantity": 80,
+            "unit": "KG",
+            "userAddressId": 1,
+            "date": "12/03/2023",
+            "pickupTime": "13/02/2023 11:00 PM",
+            "remarks": "No Remarks",
+            "status": "Accepted",
+            "acceptanceDetails": {
+                "organizationName": "Hefez Al Nemah Charity",
+                "courierName": "Mohammad Hadaya",
+                "courierNumber": "0954761859"
+            }
+        },
+        {
+            "id": 3,
+            "user_id": 1,
+            "foodStatus": "Edibale",
+            "quantity": 80,
+            "unit": "KG",
+            "userAddressId": 1,
+            "date": "12/03/2023",
+            "pickupTime": "13/02/2023 11:00 PM",
+            "remarks": "No Remarks",
+            "status": "Accepted",
+            "acceptanceDetails": {
+                "organizationName": "Hefez Al Nemah Charity",
+                "courierName": "Mohammad Hadaya",
+                "courierNumber": "0954761859"
+            }
+        },
+        {
+            "id": 4,
+            "user_id": 1,
+            "foodStatus": "Edibale",
+            "quantity": 80,
+            "unit": "KG",
+            "userAddressId": 1,
+            "date": "12/03/2023",
+            "pickupTime": "13/02/2023 11:00 PM",
+            "remarks": "No Remarks",
+            "status": "Accepted",
+            "acceptanceDetails": {
+                "organizationName": "Hefez Al Nemah Charity",
+                "courierName": "Mohammad Hadaya",
+                "courierNumber": "0954761859"
+            }
+        },
+        {
+            "id": 5,
+            "user_id": 1,
+            "foodStatus": "Edibale",
+            "quantity": 80,
+            "unit": "KG",
+            "userAddressId": 1,
+            "date": "12/03/2023",
+            "pickupTime": "13/02/2023 11:00 PM",
+            "remarks": "No Remarks",
+            "status": "Accepted",
+            "acceptanceDetails": {
+                "organizationName": "Hefez Al Nemah Charity",
+                "courierName": "Mohammad Hadaya",
+                "courierNumber": "0954761859"
+            }
+        }
+    ]
+}
