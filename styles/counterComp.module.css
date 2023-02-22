@@ -16,7 +16,7 @@
     flex-direction: row;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
     min-height:fit-content;
     justify-self: start;
     /* width:100vw; */
@@ -45,7 +45,7 @@
     
   
 }
-@media screen and (max-width:768px){
+@media screen and (max-width:480px){
 .container{
     flex-wrap:wrap;
 }

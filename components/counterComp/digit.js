@@ -7,7 +7,7 @@ const Digit = ({ num ,key}) => {
   const [counter2,setCounter2] = useState(0);
   console.log(key)
   if (counter < num +25) {
-    setTimeout(() => setCounter(counter + 1), (50*(1/(num+1))))
+    setTimeout(() => setCounter(counter + 1), (300*(1/(num+1))))
   }
 
   return (

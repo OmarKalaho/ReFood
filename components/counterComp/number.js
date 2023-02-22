@@ -19,7 +19,7 @@ const Number = ({ index, label, num, unit }) => {
   useEffect(() => {
     setTimeout(() => {
       setComp(true);
-    }, 1000 * (index+1));
+    },1000 * (index));
   }, []);
 
   return (

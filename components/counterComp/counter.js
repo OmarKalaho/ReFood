@@ -4,7 +4,7 @@ import styles from "../../styles/counterComp.module.css";
 
 const numbers = [
   { value: 540, unit: "Families", label: "Families Helped" },
-  { value: 20000, unit: "Litres", label: "Organic Fertilizer Produced" },
+  { value: 21145, unit: "Litres", label: "Organic Fertilizer Produced" },
   // { value: 32000,  unit: "Meters Cubed", label: "Displaced Co2" },
   { value: 15, unit: "MW/h", label: " Electricity Generated" },
   //  { WastedFoodSaved: 500000},
