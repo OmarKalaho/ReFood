@@ -15,7 +15,7 @@
   height:100%;
 }
 .titleBodyBox {
-  flex:0 1 50vw;
+  flex:1 0 50vw;
 }
 .titleContainer {
   display: flex;
@@ -54,7 +54,7 @@
   
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 932px) {
   .BoxContainer {
     margin-top: 10vh;
   }
@@ -66,12 +66,17 @@
     margin-top: -10px;
     color: grey;
   }
-  .titleBodyBox {
-    padding: 20px;
-    width: 100vh;
-  }
+  .imageContainer{
+    margin-top: 100px;
+  } 
   .h2 {
     line-height: 30px;
     letter-spacing: normal;
+  }
+}
+@media screen and (min-width:932px){
+
+  .titleBodyBox{
+    flex:0 0 50vw;
   }
 }
