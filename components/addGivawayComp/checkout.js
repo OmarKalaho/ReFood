@@ -1,21 +1,21 @@
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { ThemeProvider } from "@mui/material/styles";
-import QuantityForm from "./addressForm";
-import PaymentForm from "./paymentForm";
+import QuantityForm from "./quantityForm";
+import PaymentForm from "./quantityForm";
 import FoodStatusForm from "./foodStatusForm";
 import Review from "./review";
+import AddressForm from "./addressForm.js";
+import DateTimeForm from "./dateTimeForm";
+import RemarksForm   from "./remarksForm";
+
 
 const steps = [
   "Food Status",
@@ -31,13 +31,13 @@ function getStepContent(step) {
     case 0:
       return <FoodStatusForm />;
     case 1:
-      return <PaymentForm />;
+      return <QuantityForm />;
     case 2:
-      return <Review />;
+      return <AddressForm />;
     case 3:
-      return <PaymentForm />;
+      return <DateTimeForm />;
     case 4:
-      return <Review />;
+      return <RemarksForm />;
     case 5:
       return <Review />;
     default:
@@ -63,7 +63,7 @@ export default function Checkout() {
       <Container component="main" maxWidth="md" sx={{ minHeight: "100vh" }}>
         <Paper
           variant="outlined"
-          sx={{ height: "90vh", marginTop: "6vh", p: { xs: 2, md: 3 } }}
+          sx={{ height: "96vh", marginY: "2vh", p: { xs: 2, md: 3 } }}
         >
           <Typography component="h1" variant="h4" align="center">
             New GiveAway
@@ -81,9 +81,8 @@ export default function Checkout() {
                 Thank you for your GiveAway.
               </Typography>
               <Typography variant="subtitle1">
-                Success. We have emailed your giveaway
-                confirmation, and will send you an update when your givaway will be
-                picked up.
+                Success. We have emailed your giveaway confirmation, and will
+                send you an update when your givaway will be picked up.
               </Typography>
             </React.Fragment>
           ) : (
@@ -95,14 +94,22 @@ export default function Checkout() {
                     Back
                   </Button>
                 )}
-
+              {activeStep>0 ?(
                 <Button
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
                 >
                   {activeStep === steps.length - 1 ? "Confirm" : "Next"}
-                </Button>
+                </Button>):(
+            
+              <Button
+                  variant="contained"
+                  onClick={handleNext}
+                  sx={{ mt: 3, ml: 1 }}
+                >
+                  Both
+                </Button>)}
               </Box>
             </React.Fragment>
           )}
