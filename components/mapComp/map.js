@@ -37,23 +37,18 @@ const onclick = (e)=>{console.log(e)}
       
     >
       <Marker
-        icon={"http://maps.google.com/mapfiles/ms/icons/green.png"}
-        position={{ lat: 33.2138, lng: 36.17 }}
+        position={{ lat: 33.5138, lng: 36.2734 }}
       ></Marker>
       <Marker
-        icon={"http://maps.google.com/mapfiles/ms/icons/green.png"}
         position={{ lat: 33.3138, lng: 36.27 }}
       ></Marker>
       <Marker
-        icon={"http://maps.google.com/mapfiles/ms/icons/green.png"}
         position={{ lat: 33.1138, lng: 36.37 }}
       ></Marker>
       <Marker
-        icon={"http://maps.google.com/mapfiles/ms/icons/green.png"}
         position={{ lat: 33.2138, lng: 36.47 }}
       ></Marker>
       <Marker
-        icon={"http://maps.google.com/mapfiles/ms/icons/green.png"}
         position={{ lat: 33.2138, lng: 36.77 }}
       ></Marker>
     </GoogleMap>
