@@ -14,7 +14,7 @@ import FoodStatusForm from "./foodStatusForm";
 import Review from "./review";
 import AddressForm from "./addressForm.js";
 import DateTimeForm from "./dateTimeForm";
-import RemarksForm   from "./remarksForm";
+import RemarksForm from "./remarksForm";
 
 
 const steps = [
@@ -26,27 +26,16 @@ const steps = [
   "Confirm",
 ];
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <FoodStatusForm />;
-    case 1:
-      return <QuantityForm />;
-    case 2:
-      return <AddressForm />;
-    case 3:
-      return <DateTimeForm />;
-    case 4:
-      return <RemarksForm />;
-    case 5:
-      return <Review />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
+let giveAwayData = { FoodStatus: "", EdibleFood: {quantity:null, unit:""}, NonEdibleFood: {quantity:null, unit:""}, Quantity: 0, PickupLocation: "", PickupTime: "", ExtraRemarks: "" };
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleTransition = (payload) => {
+    giveAwayData = { ...giveAwayData, ...payload }
+    handleNext();
+    console.log(giveAwayData);
+  }
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -55,6 +44,25 @@ export default function Checkout() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return <FoodStatusForm onButtonClick={handleTransition} />;
+      case 1:
+        return <QuantityForm FoodStatus={giveAwayData.FoodStatus} onNextClick={handleTransition} />;
+      case 2:
+        return <AddressForm />;
+      case 3:
+        return <DateTimeForm />;
+      case 4:
+        return <RemarksForm />;
+      case 5:
+        return <Review />;
+      default:
+        throw new Error("Unknown step");
+    }
+  }
+
 
   return (
     <>
@@ -63,7 +71,7 @@ export default function Checkout() {
       <Container component="main" maxWidth="md" sx={{ minHeight: "100vh" }}>
         <Paper
           variant="outlined"
-          sx={{ height: "96vh", marginY: "2vh", p: { xs: 2, md: 3 } }}
+          sx={{ position: "relative", height: "96vh", width: "100%", marginY: "2vh", p: { xs: 2, md: 3 } }}
         >
           <Typography component="h1" variant="h4" align="center">
             New GiveAway
@@ -88,28 +96,13 @@ export default function Checkout() {
           ) : (
             <React.Fragment>
               {getStepContent(activeStep)}
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
                 {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                  <Button onClick={handleBack} sx={{ position: "absolute", bottom: "10%", mt: 3, ml: 1 }}>
                     Back
                   </Button>
                 )}
-              {activeStep>0 ?(
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  {activeStep === steps.length - 1 ? "Confirm" : "Next"}
-                </Button>):(
-            
-              <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  Both
-                </Button>)}
+
               </Box>
             </React.Fragment>
           )}
