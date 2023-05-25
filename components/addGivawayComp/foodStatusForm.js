@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
-export default function FoodStatusForm({ onButtonClick }) {
+export default function FoodStatusForm({ onNextClick }) {
   const payload = { FoodStatus: "" };
 
   const HandleButtonClick = (id) => {
@@ -13,16 +13,16 @@ export default function FoodStatusForm({ onButtonClick }) {
         payload.FoodStatus = "Edible"
         break;
       case 2:
-        payload.FoodStatus = "NonEdible"
+        payload.FoodStatus = "Inedible"
         break;
 
       case 3:
-        payload.FoodStatus = "Both"
+        payload.FoodStatus = "Edible and Inedible"
         break;
 
     }
 
-    onButtonClick(payload);
+    onNextClick(payload);
 
 
 
@@ -43,22 +43,21 @@ export default function FoodStatusForm({ onButtonClick }) {
           </BoxButton>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <BoxButton title=" Non Edible Food" orient="left" onClick={() => HandleButtonClick(2)}>
+          <BoxButton title="Inedible Food" orient="left" onClick={() => HandleButtonClick(2)}>
             {" "}
             For food that is not really good shape and should preferably go to a food
             recycling factory.{" "}
           </BoxButton>
         </Grid>
-        <Grid item xs={12}>
-          <Button
-            onClick={() => HandleButtonClick(3)}
-            variant="outlined"
-            sx={{ mt: 3, ml: 1, width: '100%' }}
-          >
-            Both
-          </Button>
 
-        </Grid>
+        <Button
+          onClick={() => HandleButtonClick(3)}
+          variant="contained"
+          sx={{ margin: 'auto', mt: 4, width: '50%', boxShadow: 6 }}
+        >
+          Edible & Inedible Food
+        </Button>
+
       </Grid>
     </>
   );

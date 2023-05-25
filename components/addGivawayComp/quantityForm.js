@@ -10,98 +10,142 @@ import Select from "@mui/material/Select";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
+import { isGreaterThanZero, isEmpty, isNumber } from "../../util/validation";
 
-const initializeValues = (foodStatuse)=>{
-if(foodStatuse==="Edible"){
-  return {
-    quantity1: { type: "number", valid: true, value: "" },
-    unit1: { type: "text", valid: true, value: "" },
-   
+const initFoodQuantity = {
+  EdibleFood: {
+    quantity: "",
+    unit: ""
+  },
+  InedibleFood: {
+    quantity: "",
+    unit: ""
+
   }
-}
-  if(foodStatuse==="Non-Edible"){
-    return {
-      quantity1: { type: "number", valid: true, value: "" },
-      unit1: { type: "text", valid: true, value: "" },
-     
+};
+const initError = {
+  EdibleFood: {
+    quantity: true,
+    unit: true
+  },
+  InedibleFood: {
+    quantity: true,
+    unit: true
+
+  }
+};
+
+
+export default function QuantityForm({ FoodStatus, foodQuantity, onNextClick }) {
+
+  const [FoodQuantity, setFoodQuantity] = React.useState(initFoodQuantity);
+  const [errorFoodQuantity, setErrorFoodQuantity] = React.useState(initError)
+
+  React.useEffect(() => {
+    if (foodQuantity) {
+      if (FoodStatus === "Edible") {
+        foodQuantity = { EdibleFood: { ...foodQuantity.EdibleFood },InedibleFood:{quantity:"",unit:""} }
+      }
+      if (FoodStatus === "Inedible") {
+        foodQuantity = { InedibleFood: { ...foodQuantity.InedibleFood },EdibleFood:{quantity:"",unit:"" }}
+      }
+      setFoodQuantity(foodQuantity)
     }
-  }
-    return {
-      quantity1: { type: "number", valid: true, value: "" },
-      unit1: { type: "text", valid: true, value: "" },
-      quantity2: { type: "number", valid: true, value: "" },
-      unit2: { type: "text", valid: true, value: "" },
-    }
-  }
-
-
-
-
-// const initialValues = {
-//   quantity1: { type: "number", valid: true, value: "" },
-//   unit1: { type: "text", valid: true, value: "" },
-//   quantity2: { type: "number", valid: true, value: "" },
-//   unit2: { type: "text", valid: true, value: "" },
-
-// };
-//function to validate input is a number
-function isNumber(value) {
-  return !isNaN(value);
-}
-
-export default function QuantityForm({ FoodStatus,onNextClick }) {
-
-  const [values, setValues] = React.useState(initializeValues(FoodStatus));
+  }, []);
 
   const handleValidation = () => {
-    const values1 = { ...values }
+    let foodQuantity = { ...FoodQuantity };
+    const error = {...errorFoodQuantity};
     let validity;
-    for (const value in values1) {
-      if (values1[value].type === "number") {
-        if (!isNumber(values1[value].value)) {
-          values1[value]["valid"] = false;
-          validity = "Invalid"
+    if (FoodStatus === "Edible") {
+      foodQuantity = { EdibleFood: { ...FoodQuantity.EdibleFood } }
+    }
+    if (FoodStatus === "Inedible") {
+      foodQuantity = { InedibleFood: { ...FoodQuantity.InedibleFood } }
+    }
+    for (let foodStatus in foodQuantity) {
 
-        }
-      }
-       
-      if (values1[value].value === "") {
-          values1[value]["valid"] = false;
-          validity = "Invalid"
-        
+      error[foodStatus]['quantity'] = true;
+      error[foodStatus]['unit'] = true;
 
+      if (!isNumber(foodQuantity[foodStatus]['quantity']) ||
+        !isGreaterThanZero(foodQuantity[foodStatus]['quantity']) ||
+        isEmpty(foodQuantity[foodStatus]['quantity'])) {
+        error[foodStatus]['quantity'] = false;
+        validity = "Invalid"
+      }
+
+      if (isEmpty(foodQuantity[foodStatus]['unit'])) {
+        error[foodStatus]['unit'] = false;
+        validity = "Invalid"
       }
     }
-    if(validity=="Invalid"){
-      setValues(values1);
-      console.log(values)
+
+    if (validity == "Invalid") {
+      setErrorFoodQuantity(error);
+      return false;
     }
-    else{
-      onNextClick(values)
-    }
+    return true;
+
   }
-  const handleSubmit = () => {
-    
+  const handleNextClick = () => {
     if (handleValidation()) {
-      setValid("Valid");
-    } else {
-      setValid("Invalid");
+      onNextClick({ FoodQuantity });
     }
+
   }
-  
 
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: { ...values[name], value: value }
-    });
-  };
+  const Inputs = (foodStatus) => {
+
+    return (
+      <>
+        <TextField
+          sx={{ flex: "0 2 200px" }}
+          id={`${foodStatus}Quantiy`}
+          key={`${foodStatus}Quantiy`}
+          error={!errorFoodQuantity[foodStatus]["quantity"]}
+          label="Quantity"
+          type="number"
+          fullWidth
+          autoComplete="cc-name"
+          variant="standard"
+          name={`${foodStatus} Quantiy`}
+          value={FoodQuantity[foodStatus]["quantity"]}
+          onChange={(e) => setFoodQuantity({
+            ...FoodQuantity,
+            [foodStatus]: { ...FoodQuantity[foodStatus], quantity: e.target.value }
+          })
+          } />
+
+        <FormControl variant="standard" sx={{ flex: "0 1 100px" }}>
+          <InputLabel id={`${foodStatus} unit demo-simple-select-label`}>Unit</InputLabel>
+          <Select
+            labelId={`${foodStatus} unit`}
+            id={`${foodStatus} unit`}
+            error={!errorFoodQuantity[foodStatus]["unit"]}
+            value={FoodQuantity[foodStatus]["unit"]}
+            label="Unit"
+            onChange={(e) => setFoodQuantity({
+              ...FoodQuantity,
+              [foodStatus]: { ...FoodQuantity[foodStatus], unit: e.target.value }
+            })
+            }
+            name={`${foodStatus} unit`}
+          >
+            <MenuItem value={"KG"}>KG</MenuItem>
+            <MenuItem value={"Meals"}>Meals</MenuItem>
+          </Select>
+        </FormControl>
+      </>
+
+    );
+  }
+
 
   return (
     <React.Fragment>
-      {(FoodStatus === "Both" ||
+      {(FoodStatus === "Edible and Inedible" ||
         FoodStatus === "Edible"
       ) && (
           <>
@@ -109,95 +153,32 @@ export default function QuantityForm({ FoodStatus,onNextClick }) {
               Edible Food Quantiy
             </Typography>
             <Box sx={{ display: "flex", gap: 3 }}>
-              <TextField
-                sx={{ flex: "0 2 200px" }}
-                required
-                id="Quantiy1"
-                error={!values["quantity1"]["valid"]}
-                label="Quantity"
-                type="number"
-                fullWidth
-                autoComplete="cc-name"
-                variant="standard"
-                name="quantity1"
-                value={values["quantity1"]["value"]}
-                onChange={handleInputChange}
-              />
-
-              <FormControl variant="standard" sx={{ flex: "0 1 100px" }}>
-                <InputLabel id="demo-simple-select-label">Unit</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                 error={!values["unit1"]["valid"]}
-
-                  value={values["unit1"]["value"]}
-                  label="Unit"
-                  onChange={handleInputChange}
-                  name="unit1"
-                >
-                  <MenuItem value={"KG"}>KG</MenuItem>
-                  <MenuItem value={"Meals"}>Meals</MenuItem>
-                </Select>
-              </FormControl>
+              {Inputs("EdibleFood")}
             </Box>
           </>
         )}
 
-      {(FoodStatus === "Both" ||
-        FoodStatus === "NonEdible"
+      {(FoodStatus === "Edible and Inedible" ||
+        FoodStatus === "Inedible"
       ) && (
           <>
             <Typography variant="h6" gutterBottom sx={{ marginTop: "50px" }}>
               Non Edible Food Quantiy
             </Typography>
             <Box sx={{ display: "flex", gap: 3 }}>
-              <TextField
-                sx={{ flex: "0 2 200px" }}
-                required
-                id="Quantiy2"
-                label="Quantity"
-                type="number"
-                fullWidth
-                autoComplete="cc-name"
-                variant="standard"
-                name="quantity2"
-                error={!values["quantity2"]["valid"]}
-
-                value={values["quantity2"]["value"]}
-                onChange={handleInputChange}
-              />
-
-              <FormControl variant="standard" sx={{ flex: "0 1 100px" }}>
-                <InputLabel id="demo-simple-select-label">Unit</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="unit2"
-                error={!values["unit2"]["valid"]}
-
-                  value={values["unit2"]["value"]}
-                  label="Unit"
-                  onChange={handleInputChange}
-                  name="unit2"
-                >
-                  <MenuItem value={"KG"}>KG</MenuItem>
-                  <MenuItem value={"Meals"}>Meals</MenuItem>
-                </Select>
-              </FormControl>
-             
-
+              {Inputs("InedibleFood")}
             </Box>
           </>
         )}
-         <Box sx={{ position: "absolute", bottom: "10%", right: "7%" }}>
-                <Button
-                  variant="contained"
-                  onClick={handleValidation}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  Next
-                </Button>
-              </Box>
+      <Box sx={{ position: "absolute", bottom: "10%", right: "7%" }}>
+        <Button
+          variant="contained"
+          onClick={handleNextClick}
+          sx={{ mt: 3, ml: 1 }}
+        >
+          Next
+        </Button>
+      </Box>
     </React.Fragment>
   );
 }

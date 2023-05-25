@@ -4,56 +4,55 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 
-const products = [
-  {
-    name: 'Food Status',
-    desc: '',
-    price: 'Edibale',
-  },
-  {
-    name: 'Quantity',
-    desc: '(Kgs)',
-    price: '1000',
-  }
-];
 
-const addresses = ['Al Shami', 'Malki', 'Damascus', 'SYRIA'];
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
-];
-
-export default function Review() {
+export default function Review({ reviewData }) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Giveaway summary
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
+        <ListItem sx={{ py: 0, px: 0 }}>
+          <ListItemText primary="Food Status" secondary=" " />
+          <Typography variant="body2"> {reviewData.FoodStatus}</Typography>
+        </ListItem>
+        <ListItem sx={{ py: 0, px: 0 }}>
+          <ListItemText color="primary" primary="Edible Food Quantity" secondary={reviewData.FoodQuantity.EdibleFood.unit} />
+          <Typography variant="body2"> {reviewData.FoodQuantity.EdibleFood.quantity}</Typography>
+        </ListItem>
+        <ListItem sx={{ py: 0, px: 0 }}>
+          <ListItemText color="primary" primary="Inedible Food Quantity" secondary={reviewData.FoodQuantity.InedibleFood.unit} />
+          <Typography variant="body2"> {reviewData.FoodQuantity.InedibleFood.quantity ? reviewData.FoodQuantity.InedibleFood.quantity : 0}</Typography>
+        </ListItem>
+        {/* <ListItem sx={{ py: 1, px: 0 }}>
+            <ListItemText primary="Address" secondary={reviewData.PickupLocation.addressName}/>
+            <Typography variant="body2"> {reviewData.PickupLocation.address}</Typography>
           </ListItem>
-        ))}
+          <ListItem sx={{ py: 1, px: 0 }}>
+            <ListItemText primary="Time" />
+            <Typography variant="body2"> {reviewData.PickupTime}</Typography>
+          </ListItem> */}
 
       </List>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+      <Divider variant="middle" sx={{ mb: 2 }} />
+      <Grid container spacing={2} >
+        <Grid item xs={12} sm={8}>
+          {/* <Typography variant="h6" gutterBottom sx={{ mt:0 }}>
             Time & Location
-          </Typography>
-          <Typography gutterBottom>Jad Hadaya</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
+          </Typography> */}
+          <Typography variant="caption" gutterBottom >Time</Typography>
+          <Typography variant="body2" gutterBottom >{reviewData.PickupTime}</Typography>
+
+          <Typography variant="caption" gutterBottom >{`Location ( ${reviewData.PickupLocation.addressName} )`}</Typography>
+          <Typography gutterBottom variant="body2" >{reviewData.PickupLocation.address}</Typography>
         </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+        <Grid item container direction="column" xs={12} sm={4}>
+          <Typography variant="caption" gutterBottom sx={{ mt: 0 }}>
             Remarks
           </Typography>
-          
+          <Typography variant="body2" gutterBottom>{reviewData.ExtraRemarks}</Typography>
         </Grid>
       </Grid>
     </React.Fragment>

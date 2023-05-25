@@ -16,7 +16,7 @@ const BoxButton = ({ title, children, orient,icon, onClick}) => {
         sx={{ boxShadow: 1 }}
         onClick ={onClick}
       >
-        <h1 className={styles.h1}>{title}</h1>
+        <h1 className={styles.h2}>{title}</h1>
         <p className={styles.p}>{children}</p>
         {icon}
         <div className={overlayOrient}></div>

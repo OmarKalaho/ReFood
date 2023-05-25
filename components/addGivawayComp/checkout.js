@@ -9,7 +9,6 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import QuantityForm from "./quantityForm";
-import PaymentForm from "./quantityForm";
 import FoodStatusForm from "./foodStatusForm";
 import Review from "./review";
 import AddressForm from "./addressForm.js";
@@ -26,7 +25,7 @@ const steps = [
   "Confirm",
 ];
 
-let giveAwayData = { FoodStatus: "", EdibleFood: {quantity:null, unit:""}, NonEdibleFood: {quantity:null, unit:""}, Quantity: 0, PickupLocation: "", PickupTime: "", ExtraRemarks: "" };
+let giveAwayData = { FoodStatus: "", FoodQuantity:null, PickupLocation: null, PickupTime: "", ExtraRemarks: "" };
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -47,17 +46,17 @@ export default function Checkout() {
   const getStepContent = (step) => {
     switch (step) {
       case 0:
-        return <FoodStatusForm onButtonClick={handleTransition} />;
+        return <FoodStatusForm onNextClick={handleTransition} />;
       case 1:
-        return <QuantityForm FoodStatus={giveAwayData.FoodStatus} onNextClick={handleTransition} />;
+        return <QuantityForm FoodStatus={giveAwayData.FoodStatus} foodQuantity={giveAwayData.FoodQuantity} onNextClick={handleTransition} />;
       case 2:
-        return <AddressForm />;
+        return <AddressForm address={giveAwayData.PickupLocation} onNextClick={handleTransition}/>;
       case 3:
-        return <DateTimeForm />;
+        return <DateTimeForm onNextClick={handleTransition} pickupTime={giveAwayData.PickupTime}/>;
       case 4:
-        return <RemarksForm />;
+        return <RemarksForm onNextClick={handleTransition} extraRemarks={giveAwayData.ExtraRemarks}/>;
       case 5:
-        return <Review />;
+        return <Review reviewData={giveAwayData} />;
       default:
         throw new Error("Unknown step");
     }
