@@ -1,6 +1,9 @@
 import { GoogleMap, MarkerF, useLoadScript, Data } from "@react-google-maps/api";
-import ComboBox from "./comboBox";
+import ComboBox from "./comboBox2";
 import * as React from "react";
+import Box from "@mui/material/Box";
+
+
 
 const containerStyle = {
   width: "100%",
@@ -26,7 +29,9 @@ function Map({onClick,markerPosition}) {
       draggableCursor: "crosshair",
       controlSize: 30,
       disableDoubleClickZoom: true,
-      zoomControl: false
+      zoomControl: false,
+      // mapId:'160ecaf42842ab89'
+      mapId:'7ea8b3b4691f9afe'
     }),
     []
   );
@@ -41,8 +46,7 @@ function Map({onClick,markerPosition}) {
       onLoad={onLoad}
       onClick={onClick}
       >
-      <ComboBox/>
-    
+    <ComboBox />
     <MarkerF  
       position={markerPosition}
       visible={true}

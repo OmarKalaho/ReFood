@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import Map from '../mapComp/mapInput';
 import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
+import ComboBox from "../mapComp/comboBox2";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -20,7 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function FullScreenDialog({ onSave }) {
   const [open, setOpen] = React.useState(false);
-  const [markerPosition, setMarkerPosition] = React.useState({});
+  const [markerPosition, setMarkerPosition] = React.useState();
 
   const handleClick = (e) => {
     setMarkerPosition(e.latLng );
@@ -51,7 +52,7 @@ export default function FullScreenDialog({ onSave }) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar sx={{ position: 'relative', backgroundColor: 'black',}}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -69,8 +70,8 @@ export default function FullScreenDialog({ onSave }) {
             </Button>
           </Toolbar>
         </AppBar>
-
-        <Map onClick={handleClick} markerPosition={markerPosition} />
+       
+         <Map onClick={handleClick} markerPosition={markerPosition} /> 
 
       </Dialog>
     </>

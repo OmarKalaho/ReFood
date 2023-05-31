@@ -30,7 +30,7 @@ const onclick = (e)=>{console.log(e)}
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={10}
+      zoom={13}
       options={options}
       onLoad={onLoad}
       onClick={onclick}

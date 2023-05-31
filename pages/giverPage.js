@@ -17,15 +17,25 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import BDialogTitle from "../components/addGivawayComp/dialogTitle";
 import Slide from '@mui/material/Slide';
 import GiveAwayTable from "../components/giveAwayComp/giveAwayTableMui";
+import CardGiveAway from "../components/giveAwayComp/cardGiveAway";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import image1 from "../public/images/image457.png";
+import { useTheme } from '@mui/material/styles';
 
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
 const GiverPage = () => {
   const [open, setOpen] = React.useState(false);
-  const [tableRows,setTableRows]=React.useState(null);
+  const [tableRows, setTableRows] = React.useState(null);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const StyledFab = styled(Fab)({
     position: "fixed",
@@ -34,14 +44,13 @@ const GiverPage = () => {
   });
 
   React.useEffect(() => {
-    fetch(" http://localhost:3004/GiveAway?user_id=1",{method:'GET'})
+    fetch("http://localhost:4000/api/giveAways", { method: 'GET' })
       .then((response) => {
         if (response.ok) {
           return response.json();
         }
       })
       .then((data) => {
-        console.log(data);
         setTableRows(data)
       });
   }, []);
@@ -55,14 +64,26 @@ const GiverPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <CssBaseline />
-      <Modal
+      <Dialog
+      
+        fullWidth='true'
+        maxWidth='md'
+        fullScreen={fullScreen}
         open={open}
+        TransitionComponent={Transition}
+        keepMounted
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-describedby="alert-dialog-slide-description"
       >
-        <AddGivaway />
-      </Modal>
+           <BDialogTitle id="customized-dialog-title" onClose={handleClose}>
+           {"Add New GiveAway"}
+        </BDialogTitle>
+        
+        <DialogContent sx={{p:1}}>
+          <AddGivaway tableRows={tableRows} setTableRows={setTableRows} />
+        </DialogContent>
+        
+      </Dialog>
       <Grid container>
         <Grid item md={9} xs={12}>
           <Box
@@ -75,8 +96,8 @@ const GiverPage = () => {
               ml: "1vw",
             }}
           >
-            {tableRows&&<GiveAwayTable rows ={tableRows} />}
-            
+            {tableRows && <GiveAwayTable rows={tableRows} />}
+
           </Box>
         </Grid>
         <Grid item md={3}>
@@ -84,7 +105,7 @@ const GiverPage = () => {
           <Box
             sx={{
               display: { xs: "none", md: "block" },
-              mt: "11vh",
+              mt: "0vh",
               alignContent: "center",
               height: "87vh",
             }}

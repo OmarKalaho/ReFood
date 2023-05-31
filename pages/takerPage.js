@@ -43,7 +43,6 @@ const rows = [
     col3: "150",
     col4: "meal",
     col5: "18-2-23 21:00",
-    
     col7:"No Remarks"
   },
   {

@@ -7,11 +7,12 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import BackNextButtons from "./backandNextButton";
 
 
 
 export default function BasicDateTimePicker({onNextClick,pickupTime}) {
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = React.useState(new dayjs());
   React.useEffect(() => { 
     if(pickupTime){
       setValue(dayjs(pickupTime))
@@ -33,15 +34,8 @@ export default function BasicDateTimePicker({onNextClick,pickupTime}) {
           }}
         />
       </LocalizationProvider>
-      <Box sx={{ position: "absolute", bottom: "10%", right: "7%" }}>
-          <Button
-            variant="contained"
-            onClick={() =>{onNextClick({PickupTime:value.toString()})}}
-            sx={{ mt: 3, ml: 1 }}
-          >
-            Next
-          </Button>
-        </Box>
+      <BackNextButtons onNextClick={(button)=>onNextClick(button,{PickupTime:value.toString()})} />
+      
     </>
   );
 }

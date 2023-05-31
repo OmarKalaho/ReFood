@@ -22,7 +22,7 @@ export default function FoodStatusForm({ onNextClick }) {
 
     }
 
-    onNextClick(payload);
+    onNextClick("Next",payload);
 
 
 

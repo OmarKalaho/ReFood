@@ -41,7 +41,7 @@ export default function EnhancedTableToolbar(props) {
   
           <Typography
             sx={{ margin:'auto',flex: "1 1 100%" }}
-            variant="h4"
+            variant="h5"
             id="tableTitle"
             component="div"
             color='primary'

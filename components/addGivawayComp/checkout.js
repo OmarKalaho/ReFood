@@ -25,16 +25,60 @@ const steps = [
   "Confirm",
 ];
 
-let giveAwayData = { FoodStatus: "", FoodQuantity:null, PickupLocation: null, PickupTime: "", ExtraRemarks: "" };
+let giveAwayData = { FoodStatus: "", FoodQuantity: null, PickupLocation: null, PickupTime: "", ExtraRemarks: "",AcceptanceStatus:"Pending",AcceptanceDetails:{courierName:"",courierNumber:"",organizationName:""}};
 
-export default function Checkout() {
+export default function Checkout({ tableRows, setTableRows }) {
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleTransition = (payload) => {
+  const handleTransition = (button,payload) => {
     giveAwayData = { ...giveAwayData, ...payload }
-    handleNext();
+    if(button === "Next"){
+      handleNext();
+    }else{
+      handleBack();
+    }
     console.log(giveAwayData);
   }
+
+  const handleConfirmClick = async () => {
+    if (giveAwayData.FoodStatus === "Edible and Inedible") {
+      let data1;
+      let data2;
+      let object = { ...giveAwayData, FoodStatus: "Edible" };
+      fetch("http://localhost:4000/api/giveAways", { method: 'POST', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
+        .then((response) => {
+          if (response.ok) {
+            response.json().then(data => { data1 = data });
+            object = { ...giveAwayData, FoodStatus: "Inedible" }
+            fetch("http://localhost:4000/api/giveAways", { method: 'POST', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
+              .then((response) => {
+                if (response.ok) {
+                  return response.json();
+                }
+              })
+              .then((data) => {
+                data2 = data;
+                setTableRows([...tableRows, data1, data2])
+                handleNext();
+              });
+          }
+
+        }
+        )
+    } else {
+      fetch("http://localhost:4000/api/giveAways", { method: 'POST', body: JSON.stringify(giveAwayData), headers: { 'Content-Type': 'application/json' } })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          setTableRows([...tableRows, data])
+          handleNext();
+        });
+    }
+  }
+
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -50,15 +94,14 @@ export default function Checkout() {
       case 1:
         return <QuantityForm FoodStatus={giveAwayData.FoodStatus} foodQuantity={giveAwayData.FoodQuantity} onNextClick={handleTransition} />;
       case 2:
-        return <AddressForm address={giveAwayData.PickupLocation} onNextClick={handleTransition}/>;
+        return <AddressForm address={giveAwayData.PickupLocation} onNextClick={handleTransition} />;
       case 3:
-        return <DateTimeForm onNextClick={handleTransition} pickupTime={giveAwayData.PickupTime}/>;
+        return <DateTimeForm onNextClick={handleTransition} pickupTime={giveAwayData.PickupTime} />;
       case 4:
-        return <RemarksForm onNextClick={handleTransition} extraRemarks={giveAwayData.ExtraRemarks}/>;
+        return <RemarksForm onNextClick={handleTransition} extraRemarks={giveAwayData.ExtraRemarks} />;
       case 5:
-        return <Review reviewData={giveAwayData} />;
-      default:
-        throw new Error("Unknown step");
+        return <Review reviewData={giveAwayData} onConfirmClick={handleConfirmClick} onBackClick={handleBack} />;
+      
     }
   }
 
@@ -67,14 +110,15 @@ export default function Checkout() {
     <>
       <CssBaseline />
 
-      <Container component="main" maxWidth="md" sx={{ minHeight: "100vh" }}>
+      {/* <Container component="main" maxWidth="md" sx={{ minHeight: "100vh" }}> */}
         <Paper
-          variant="outlined"
-          sx={{ position: "relative", height: "96vh", width: "100%", marginY: "2vh", p: { xs: 2, md: 3 } }}
+          variant=""
+          sx={{ width: "100%" ,minHeight: "75vh" }}
+          // sx={{ position: "relative", height: "96vh", width: "100%", marginY: "vh", p: { xs: 2, md: 3 } }}
         >
-          <Typography component="h1" variant="h4" align="center">
+          {/* <Typography component="h1" variant="h4" align="center">
             New GiveAway
-          </Typography>
+          </Typography> */}
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
               <Step key={label}>
@@ -95,18 +139,11 @@ export default function Checkout() {
           ) : (
             <React.Fragment>
               {getStepContent(activeStep)}
-              <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ position: "absolute", bottom: "10%", mt: 3, ml: 1 }}>
-                    Back
-                  </Button>
-                )}
-
-              </Box>
+           
             </React.Fragment>
-          )}
+          )}  
         </Paper>
-      </Container>
+      {/* </Container> */}
     </>
   );
 }

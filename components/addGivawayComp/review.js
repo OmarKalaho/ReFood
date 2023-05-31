@@ -5,9 +5,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
+import { Button,Box } from '@mui/material';
 
 
-export default function Review({ reviewData }) {
+export default function Review({ reviewData,onConfirmClick,onBackClick }) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -36,7 +37,7 @@ export default function Review({ reviewData }) {
           </ListItem> */}
 
       </List>
-      <Divider variant="middle" sx={{ mb: 2 }} />
+      <Divider variant="" sx={{ mt:1,mb:1 }} />
       <Grid container spacing={2} >
         <Grid item xs={12} sm={8}>
           {/* <Typography variant="h6" gutterBottom sx={{ mt:0 }}>
@@ -55,6 +56,24 @@ export default function Review({ reviewData }) {
           <Typography variant="body2" gutterBottom>{reviewData.ExtraRemarks}</Typography>
         </Grid>
       </Grid>
+
+
+    <Box sx={{ display: 'flex', justifyContent: 'space-between',width:"96%",position: "absolute", bottom: "1%",p:1}}>
+            <Button
+            name="Back"
+            onClick={onBackClick} 
+            >
+                Back
+            </Button>
+            <Button
+            name="Next"
+                variant="contained"
+                onClick={onConfirmClick}
+            >
+                Confirm
+            </Button>
+
+        </Box>
     </React.Fragment>
   );
 }

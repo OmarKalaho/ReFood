@@ -33,7 +33,7 @@ export default function ComboBox() {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
-  const map = useGoogleMap();  
+  const map = useGoogleMap();
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
       loadScript(
@@ -91,29 +91,29 @@ export default function ComboBox() {
     };
   }, [value, inputValue, fetch]);
 
-const PanToo = (address)=>{
-    if(address == null){
-        return
+  const PanToo = (address) => {
+    if (address == null) {
+      return
     }
     Geocode.fromAddress(address).then(
-        (response) => {
-          const { lat, lng } = response.results[0].geometry.location;
-          map.panTo({lat,lng})
-          map.setZoom(18)
-          // map.fitBoundsmap(map.getBounds());
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-}
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        map.panTo({ lat, lng })
+        map.setZoom(18)
+        // map.fitBoundsmap(map.getBounds());
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
 
 
 
   return (
     <Autocomplete
       id="google-map-demo"
-      sx={{ width: 300, margin:'auto',marginTop:"10px" }}
+      sx={{ width: 300, margin: 'auto', marginTop: "10px" }}
       getOptionLabel={(option) =>
         typeof option === 'string' ? option : option.description
       }
@@ -127,8 +127,8 @@ const PanToo = (address)=>{
       onChange={(event, newValue) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
-        if (newValue != null){
-        PanToo(newValue.description);
+        if (newValue != null) {
+          PanToo(newValue.description);
         }
       }}
       onInputChange={(event, newInputValue) => {
@@ -145,8 +145,10 @@ const PanToo = (address)=>{
           option.structured_formatting.main_text,
           matches.map((match) => [match.offset, match.offset + match.length]),
         );
+        console.log(options);
 
         return (
+          
           <li {...props}>
             <Grid container alignItems="center">
               <Grid item sx={{ display: 'flex', width: 44 }}>

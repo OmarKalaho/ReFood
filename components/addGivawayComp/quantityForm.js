@@ -10,6 +10,7 @@ import Select from "@mui/material/Select";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
+import BackNextButtons from "./backandNextButton";
 import { isGreaterThanZero, isEmpty, isNumber } from "../../util/validation";
 
 const initFoodQuantity = {
@@ -88,10 +89,15 @@ export default function QuantityForm({ FoodStatus, foodQuantity, onNextClick }) 
     return true;
 
   }
-  const handleNextClick = () => {
+  const handleNextClick = (button) => {
+    if(button=="Back")
+    {
+      onNextClick(button, {FoodQuantity});
+    }else{
     if (handleValidation()) {
-      onNextClick({ FoodQuantity });
+      onNextClick(button, {FoodQuantity});
     }
+  }
 
   }
 
@@ -170,15 +176,10 @@ export default function QuantityForm({ FoodStatus, foodQuantity, onNextClick }) 
             </Box>
           </>
         )}
-      <Box sx={{ position: "absolute", bottom: "10%", right: "7%" }}>
-        <Button
-          variant="contained"
-          onClick={handleNextClick}
-          sx={{ mt: 3, ml: 1 }}
-        >
-          Next
-        </Button>
-      </Box>
+      
+        
+        <BackNextButtons onNextClick={handleNextClick}/>
+      
     </React.Fragment>
   );
 }

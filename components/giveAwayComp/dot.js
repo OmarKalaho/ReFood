@@ -11,16 +11,16 @@ const Dot = ({ color, size }) => {
         case 'secondary':
             main = theme.palette.secondary.main;
             break;
-        case 'error':
+        case 'Denied':
             main = theme.palette.error.main;
             break;
-        case 'warning':
-            main = theme.palette.warning.main;
+        case 'Pending':
+            main = 'yellow';
             break;
         case 'info':
             main = theme.palette.info.main;
             break;
-        case 'success':
+        case 'Accepted':
             main = theme.palette.success.main;
             break;
         case 'primary':
@@ -31,6 +31,7 @@ const Dot = ({ color, size }) => {
     return (
         <Box
             sx={{
+                display: 'inline-block',
                 width: size || 8,
                 height: size || 8,
                 borderRadius: '50%',

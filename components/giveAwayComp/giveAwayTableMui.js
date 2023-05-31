@@ -28,6 +28,10 @@ import Collapse from "@mui/material/Collapse";
 import EnhancedTableHead from "../tableComp/tableHead";
 import EnhancedTableToolbar from "../tableComp/tableToolbar";
 import TableDetails from "../tableComp/tableDetails";
+import Dot from "../giveAwayComp/dot";
+
+
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -85,10 +89,17 @@ const headCells = [
     label: "Date",
   },
   {
-    id: "status",
+    id: "foodStatus",
     numeric: false,
     disablePadding: false,
-    label: "Status",
+    label: "FoodStatus",
+  },
+
+  {
+    id: "acceptanceStatus",
+    numeric: false,
+    disablePadding: false,
+    label: "AcceptanceStatus",
   },
   {
     id: "quantity",
@@ -98,9 +109,9 @@ const headCells = [
   },
 ];
 
-export default function EnhancedTable({rows}) {
+export default function EnhancedTable({ rows }) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("status");
+  const [orderBy, setOrderBy] = React.useState("date");
   const [selected, setSelected] = React.useState([]);
   const [open, setOpen] = React.useState();
   const [page, setPage] = React.useState(0);
@@ -114,7 +125,7 @@ export default function EnhancedTable({rows}) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.date);
+      const newSelected = rows.map((n) => n._id);
       setSelected(newSelected);
       return;
     }
@@ -141,7 +152,7 @@ export default function EnhancedTable({rows}) {
   };
 
   const handleClick1 = (event, date) => {
-  
+
 
     if (open === date) {
       setOpen();
@@ -174,7 +185,7 @@ export default function EnhancedTable({rows}) {
   return (
     <React.Fragment>
       <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 1 }}>
+        <Box sx={{ width: "100%", mb: 1 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table
@@ -195,9 +206,9 @@ export default function EnhancedTable({rows}) {
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${row.id}`;
-                    const open = isOpen(row.id);
+                    const isItemSelected = isSelected(row._id);
+                    const labelId = `enhanced-table-checkbox-${row._id}`;
+                    const open = isOpen(row._id);
                     return (
                       <React.Fragment>
                         <StyledTableRow
@@ -205,12 +216,13 @@ export default function EnhancedTable({rows}) {
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
-                          key={row.id}
+                          key={row._id}
                           selected={isItemSelected}
+
                         >
                           <StyledTableCell padding="checkbox">
                             <Checkbox
-                              onClick={(event) => handleClick(event, row.id)}
+                              onClick={(event) => handleClick(event, row._id)}
                               color="primary"
                               checked={isItemSelected}
                               inputProps={{
@@ -225,20 +237,23 @@ export default function EnhancedTable({rows}) {
                             scope="row"
                             padding="normal"
                           >
-                            {row.date}
+                            {row.createdAt.substring(0, row.createdAt.indexOf('T'))}
                           </StyledTableCell>
                           <StyledTableCell align="left">
-                            {row.status}
+                            {row.FoodStatus}
                           </StyledTableCell>
                           <StyledTableCell align="left">
-                            {row.quantity}
+                            <Dot color={row.AcceptanceStatus} size={12} /> {row.AcceptanceStatus}
+                          </StyledTableCell>
+                          <StyledTableCell align="left">
+                            {row.FoodStatus == "Edible" ? row.FoodQuantity.EdibleFood.quantity + " " + row.FoodQuantity.EdibleFood.unit : row.FoodQuantity.InedibleFood.quantity + " " + row.FoodQuantity.InedibleFood.unit}
                           </StyledTableCell>
                           <StyledTableCell>
                             <IconButton
                               aria-label="expand row"
                               size="small"
                               onClick={(event) => {
-                                handleClick1(event, row.id);
+                                handleClick1(event, row._id);
                               }}
                             >
                               {open ? (
@@ -255,7 +270,7 @@ export default function EnhancedTable({rows}) {
                             colSpan={4}
                           >
                             <Collapse in={open} timeout="auto" unmountOnExit>
-                              <TableDetails details={row.acceptanceDetails} />
+                              <TableDetails details={row.AcceptanceDetails} />
                             </Collapse>
                           </TableCell>
                         </TableRow>
@@ -284,7 +299,7 @@ export default function EnhancedTable({rows}) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </Paper>
+        </Box>
         <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Dense padding"

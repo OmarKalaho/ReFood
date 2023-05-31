@@ -3,6 +3,8 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import BackNextButtons from "./backandNextButton";
+
 
 export default function RemarksForm({onNextClick,extraRemarks}) {
   const [value, setValue] = React.useState("");
@@ -17,7 +19,7 @@ export default function RemarksForm({onNextClick,extraRemarks}) {
       <Box
         component="form"
         sx={{
-          "& .MuiTextField-root": { m: 1, width: "60ch" },
+          "& .MuiTextField-root": { m: 1, width: {sm:"60ch",xs:'35ch'} },
         }}
         noValidate
         autoComplete="off"
@@ -34,16 +36,7 @@ export default function RemarksForm({onNextClick,extraRemarks}) {
         </div>
       </Box>
 
-
-      <Box sx={{ position: "absolute", bottom: "10%", right: "7%" }}>
-          <Button
-            variant="contained"
-            onClick={() =>{onNextClick({ExtraRemarks:value})}}
-            sx={{ mt: 3, ml: 1 }}
-          >
-            Next
-          </Button>
-        </Box>
+      <BackNextButtons onNextClick={(button)=>onNextClick(button,onNextClick({ExtraRemarks:value}))} />
 
     </>
   );

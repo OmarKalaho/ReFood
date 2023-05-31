@@ -14,18 +14,21 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import mapInput from "../mapComp/mapInput";
+import BackNextButtons from "./backandNextButton";
 
-export default function AddressForm({onNextClick,address}) {
-  const [add, setAdd] = React.useState("");
-  const [fields, setFields] = React.useState({ addressName: "", address: "", floor: "", premise: "", area: "", city: "", state: "", country: "" });
-  const [latLng,setLatlng] = React.useState(null);
-  const [error, setError] = React.useState({ add: false, address: false,addressName:false});
-  
+export default function AddressForm({ onNextClick, address }) {
+  const [fields, setFields] = React.useState({ selectedAddress: "", addressName: "", address: "", floor: "", premise: "", area: "", city: "", state: "", country: "" });
+  const [latLng, setLatlng] = React.useState(null);
+  const [error, setError] = React.useState({ add: false, address: false, addressName: false });
+
 
   const handleSaveLocationClick = async (latLng) => {
+    if (!latLng) {
+      return;
+    }
     const response = await getAddressFromLatLong(latLng);
     setLatlng({ lat: latLng.lat(), lng: latLng.lng() });
-    setFields({...fields ,...response });
+    setFields({ ...fields, ...response });
 
   }
 
@@ -33,9 +36,9 @@ export default function AddressForm({onNextClick,address}) {
   // function to validate inputs are set
   const validateInputs = () => {
     let errorBool = false
-    let error = { add: false, address: false,addressName:false}
+    let error = { add: false, address: false, addressName: false }
 
-    if(add ==""){
+    if (fields.selectedAddress == "") {
       error.add = true;
       errorBool = true;
     }
@@ -57,30 +60,31 @@ export default function AddressForm({onNextClick,address}) {
 
   }
 
-  const handleNextClick = () => {
-    let error = validateInputs();
-    if (error) {
-      return;
+  const handleNextClick = (button) => {
+    if (button == "Next") {
+      let error = validateInputs();
+      if (error) {
+        return;
+      }
+      onNextClick(button, { PickupLocation: { ...fields, latLng } });
     }
-    onNextClick({PickupLocation:{...fields,latLng}});
+    else {
+      onNextClick(button, { PickupLocation: { ...fields, latLng } });
+    }
+
   }
 
   React.useEffect(() => {
     console.log(address);
     if (address) {
-      setAdd(address.addressName);
       setFields(address);
       setLatlng(address.latLng);
-    } 
+    }
   }, []);
 
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Address
-      </Typography>
-
       <Grid container spacing={3}>
         <Grid item xs={6}  >
           <FormControl variant="standard" sx={{ width: "100%" }}>
@@ -91,9 +95,9 @@ export default function AddressForm({onNextClick,address}) {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               name="add"
-              value={add}
+              value={fields.selectedAddress}
               label="Select Address"
-              onChange={event => { setAdd(event.target.value); }}
+              onChange={e => { setFields({ ...fields, selectedAddress: e.target.value }) }}
               error={error.add}
             >
               <MenuItem value={"New Address"}>New Address</MenuItem>
@@ -102,7 +106,7 @@ export default function AddressForm({onNextClick,address}) {
           </FormControl>
         </Grid>
 
-        {add !==""  &&
+        {fields.selectedAddress !== "" &&
           <>
             <Grid item xs={6}>
               <TextField
@@ -155,11 +159,10 @@ export default function AddressForm({onNextClick,address}) {
 
             <Grid item xs={6} sm={4}>
               <TextField
-                required
                 id="premise"
                 value={fields.premise}
                 name="premise"
-                label="Building/Apartment No."
+                label="Building/Apartment"
                 fullWidth
                 onChange={e => setFields({ ...fields, premise: e.target.value })}
               />
@@ -218,17 +221,8 @@ export default function AddressForm({onNextClick,address}) {
             </Grid>
           </>
         }
-
-        <Box sx={{ position: "absolute", bottom: "10%", right: "7%" }}>
-          <Button
-            variant="contained"
-            onClick={handleNextClick}
-            sx={{ mt: 3, ml: 1 }}
-          >
-            Next
-          </Button>
-        </Box>
       </Grid>
+        <BackNextButtons onNextClick={handleNextClick} />
     </React.Fragment>
   );
 }
