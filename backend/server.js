@@ -1,12 +1,12 @@
 require('dotenv').config();
 const express = require('express');
-const giveAwayRoutes = require('./routes/giveAways');
+const giveAwayRoutes = require('./routes/giveAwayRoutes');
 const mongoose =require('mongoose');
 const app = express();
-// var cors = require('cors');
+var cors = require('cors');
 
 app.use(express.json());
-// app.use('*', cors());
+app.use( cors());
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');

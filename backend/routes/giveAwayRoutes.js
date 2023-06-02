@@ -1,5 +1,5 @@
 const express = require('express');
-const{createGiveAway,getAllGiveAways,deleteAll} = require('../controllers/giveAwayController');
+const{createGiveAway,getAllGiveAways,deleteAll,updateGiveAway} = require('../controllers/giveAwayController');
 
 
 const router = express.Router();
@@ -10,17 +10,12 @@ router.post('/', createGiveAway );
 
 router.delete('/', deleteAll );
 
+router.patch('/:id', updateGiveAway);
+
 router.get('/:id', (req, res) => {
-    res.json({ message: 'get single giveaway' });
+res.json({ message: 'get single giveaway' });
 });
 
 
-
-
-
-
-router.patch('/:id', (req, res) => {
-    res.json({ message: 'update giveaway' });
-});
 
 module.exports = router;

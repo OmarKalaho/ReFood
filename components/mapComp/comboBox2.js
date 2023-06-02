@@ -22,6 +22,7 @@ export default function ComboBox() {
                 const { lat, lng } = response.results[0].geometry.location;
                 map.panTo({ lat, lng })
                 map.setZoom(18)
+                
                 // map.fitBoundsmap(map.getBounds());
             },
             (error) => {

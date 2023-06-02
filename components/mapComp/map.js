@@ -1,56 +1,50 @@
 import {
   GoogleMap,
-  Marker,
+  MarkerF,
   useLoadScript,
 } from "@react-google-maps/api";
 
 import * as React from "react";
 
+const libraries = ["places"];
 const containerStyle = {
   width: "100%",
-  height: "70%",
+  height: "80%",
 };
 
 
-function Map() {
+
+function Map({center}) {
   const mapRef = React.useRef()
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
+    libraries: libraries,
   });
 
-  const center = React.useMemo(() => ({ lat: 33.5138, lng: 36.2734 }), []);
-  const options = React.useMemo( () => ({disableDefaultUI: true, clickableIcons: false,
-    }),
+  // const center = React.useMemo(() => ({ lat: 33.5138, lng: 36.2734 }), []);
+  const options = React.useMemo(() => ({
+    disableDefaultUI: true, clickableIcons: false,
+    mapId: '7ea8b3b4691f9afe'
+
+  }),
     []
   );
-const onLoad = React.useCallback(map=>(mapRef.current=map),[]);
-const onclick = (e)=>{console.log(e)}
+  const onLoad = React.useCallback(map => (mapRef.current = map), []);
+  const onclick = (e) => { console.log(e) }
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={13}
+      zoom={15}
       options={options}
       onLoad={onLoad}
       onClick={onclick}
-      
+
     >
-      <Marker
-        position={{ lat: 33.5138, lng: 36.2734 }}
-      ></Marker>
-      <Marker
-        position={{ lat: 33.3138, lng: 36.27 }}
-      ></Marker>
-      <Marker
-        position={{ lat: 33.1138, lng: 36.37 }}
-      ></Marker>
-      <Marker
-        position={{ lat: 33.2138, lng: 36.47 }}
-      ></Marker>
-      <Marker
-        position={{ lat: 33.2138, lng: 36.77 }}
-      ></Marker>
+      <MarkerF
+        position={center}
+      ></MarkerF>
+      
     </GoogleMap>
   ) : (
     <></>

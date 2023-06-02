@@ -28,4 +28,21 @@ const deleteAll = async(req,res)=>{
     res.status(200).json(result);
 }
 
-module.exports = { createGiveAway ,getAllGiveAways,deleteAll }
+
+
+const updateGiveAway = async (req, res) => {
+    const {id} = req.params;
+    const giveAway = await GiveAway.findByIdAndUpdate({_id:id}, {...req.body} , {new: true});
+    
+    if(!giveAway){
+        res.status(404).json({error: "GiveAway not found"})
+    }
+
+    res.status(200).json(giveAway);
+
+    
+
+
+}
+
+module.exports = { createGiveAway ,getAllGiveAways,deleteAll,updateGiveAway }

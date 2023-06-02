@@ -1,3 +1,4 @@
+import * as React from "react";
 import Head from "next/head";
 import Map from "../components/mapComp/map";
 import {
@@ -11,87 +12,129 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
-
-const Buttons = () => {
-  return(
-  <ButtonGroup
-    disableElevation
-    variant="text"
-    aria-label="Disabled elevation buttons"
-    orientation="vertical"
-    size="small"
-  >
-    <Button>Accept</Button>
-    <Button color={"error"}>Reject</Button>
-  </ButtonGroup>);
-};
-const columns = [
-  { field: "col1", headerName: "Time", width: 80},
-  { field: "col2", headerName: "Location", width: 270 },
-  { field: "col3", headerName: "Quantity", width: 70 },
-  { field: "col4", headerName: "Unit", width: 52 },
-  { field: "col5", headerName: "Due", width: 80 },
-  { field: "col6", headerName: "Actions", width: 80 ,renderCell: ()=>((<Buttons/>))},
-  { field: "col7", headerName: "Remarks", width: 170 },
-];
-
-const rows = [
-  {
-    id: 1,
-    col1: "17-02-23 21:51",
-    col2: "150, Abu Mehjan Al Thaqafi, Tanzeem Kafarsouseh, Damascus, Syria",
-    col3: "150",
-    col4: "meal",
-    col5: "18-2-23 21:00",
-    col7:"No Remarks"
-  },
-  {
-    id: 2,
-    col1: "17-2-23 21:51",
-    col2: "150, Abu Mehjan Al Thaqafi, Tanzeem Kafarsouseh, Damascus, Syria",
-    col3: "150",
-    col4: "meal",
-    col5: "18-2-23 21:00",
-    
-    col7:"No Remarks"
-  },
-
-  {
-    id: 3,
-    col1: "17-2-23 21:51",
-    col2: "150, Abu Mehjan Al Thaqafi, Tanzeem Kafarsouseh, Damascus, Syria",
-    col3: "150",
-    col4: "meal",
-    col5: "18-2-23 21:00",
-    col7:"No Remarks"
-  },
-  {
-    id: 4,
-    col1: "17-2-23 21:51",
-    col2: "150, Abu Mehjan Al Thaqafi, Tanzeem Kafarsouseh, Damascus, Syria",
-    col3: "150",
-    col4: "meal",
-    col5: "18-2-23 21:00",
-    col7:"No Remarks"
-  },
-  {
-    id: 5,
-    col1: "17-2-23 21:51",
-    col2: "150, Abu Mehjan Al Thaqafi, Tanzeem Kafarsouseh, Damascus, Syria",
-    col3: "150",
-    col4: "meal",
-    col5: "18-2-23 21:00",
-    col7:"No Remarks"
-  },
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
+import StyledDataGrid from "../components/takerPageComp/styledDataGrid";
+import Buttons from "../components/takerPageComp/acceptDeclineButtons";
+import Dialog from "../components/takerPageComp/takerDialog";
+dayjs.extend(relativeTime);
 
 
 
 
-
-
-];  
 
 const TakerPage = () => {
+  const [mapCenter, setMapCenter] = React.useState({})
+  const [rows, setRows] = React.useState([]);
+  const [acceptedRows, setAcceptedRows] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [browId, bsetRowId] = React.useState(null);
+  const columns = React.useMemo(
+    () => [
+      {
+
+        field: "createdAt", headerName: "Time", width: 100,
+        valueGetter: ({ row }) => {
+
+          return new dayjs(row.createdAt).from(new dayjs());
+        }
+      },
+      {
+        field: "PickupLocation", headerName: "Location", width: 270,
+        valueGetter: ({ row }) => {
+
+          return row.PickupLocation.address;
+        }
+      },
+      {
+        field: "FoodQuantity", headerName: "Quantity", width: 70,
+        type: 'number',
+        valueGetter: ({ row }) => {
+
+          return row.FoodQuantity.InedibleFood.quantity || row.FoodQuantity.EdibleFood.quantity;
+        }
+      },
+      {
+        field: "FoodUnit", headerName: "Unit", width: 60,
+        valueGetter: ({ row }) => {
+
+          return row.FoodQuantity.InedibleFood.unit || row.FoodQuantity.EdibleFood.unit;
+        }
+      },
+      {
+        field: "PickupTime", headerName: "Due", width: 110, valueGetter: ({ row }) => {
+
+          return new dayjs(row.PickupTime).from(new dayjs());
+        }
+      },
+      {
+        field: "col6", headerName: "Actions", width: 80,
+        renderCell: (params) => ((<Buttons onAClick={handleClickOpen} />))
+      },
+      {
+        field: "ExtraRemarks", headerName: "Remarks", flex: 1,
+        minWidth: 170,
+      },
+    ], []);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+
+  const handleRowClick = (params,
+    event,
+    details,
+  ) => {
+    setMapCenter(params.row.PickupLocation.latLng);
+    bsetRowId(params.row._id);
+  }
+
+  // const handleCellClick = (params,
+  //   event,
+  //   details,
+  // ) => {
+  //   console.log(params);
+  // }
+
+  const handleAcceptClick = (courierName, courierNumber) => {
+    let newRows = rows.filter((row) => row._id !== browId)
+    setRows(newRows);
+    let AcceptanceDetails={ courierName, courierNumber, organizationName: "Hefez al Nemah" };
+    let object = {AcceptanceStatus: "Accepted", AcceptanceDetails }
+    fetch("http://localhost:4000/api/giveAways/" + browId, 
+    { method: 'PATCH', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+      }).then((data) => { console.log(data) })
+
+  }
+
+
+
+  React.useEffect(() => {
+    fetch("http://localhost:4000/api/giveAways", { method: 'GET' })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data)
+        setRows(data);
+        setMapCenter(data[0].PickupLocation.latLng)
+      });
+
+
+  }, []);
   return (
     <>
       <Head>
@@ -100,25 +143,38 @@ const TakerPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/image1.png" size />
       </Head>
-
+      <Dialog open={open} handleClose={handleClose} handleAcceptClick={handleAcceptClick} />
       <Grid container
-        spacing={3} sx={{marginTop:'8.5vh',height:'90vh',paddingX:'1.3em',paddingY:'0'}}
+        spacing={3} sx={{ marginTop: '8.5vh', height: '90vh', paddingX: '1.3em', paddingY: '0' }}
       >
         <Grid item xs={12} md={8} >
-          <DataGrid
+          <StyledDataGrid
             rows={rows}
             columns={columns}
             components={{
               Toolbar: GridToolbar,
             }}
+            getRowId={(row) => row._id}
             getRowHeight={() => 'auto'}
+            onRowClick={handleRowClick}
+            // onCellClick={handleCellClick}
+            initialState={{
+              columns: {
+                columnVisibilityModel: {
+                  createdAt: false,
+                },
+              },
+            }}
+
+          // loading
+
           />
         </Grid>
-        <Grid item xs={12} md={4}  sx={{marginTop:'10px'}}>
-          <Map />
+        <Grid item xs={12} md={4} sx={{ marginTop: '4px' }}>
+          <Map center={mapCenter} />
         </Grid>
       </Grid>
-      
+
     </>
   );
 };
