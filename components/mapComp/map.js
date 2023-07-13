@@ -14,12 +14,13 @@ const containerStyle = {
 
 
 
-function Map({center}) {
+function Map({ center }) {
   const mapRef = React.useRef()
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
+  
 
   // const center = React.useMemo(() => ({ lat: 33.5138, lng: 36.2734 }), []);
   const options = React.useMemo(() => ({
@@ -34,17 +35,19 @@ function Map({center}) {
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={center}
+      center={center[0]}
       zoom={15}
       options={options}
       onLoad={onLoad}
       onClick={onclick}
 
     >
+      {center.map((item, index) => 
       <MarkerF
-        position={center}
-      ></MarkerF>
-      
+        position={item} key={index}
+      ></MarkerF>)}
+
+
     </GoogleMap>
   ) : (
     <></>

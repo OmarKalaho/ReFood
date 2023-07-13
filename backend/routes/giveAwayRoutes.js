@@ -1,10 +1,11 @@
 const express = require('express');
-const{createGiveAway,getAllGiveAways,deleteAll,updateGiveAway} = require('../controllers/giveAwayController');
+const{createGiveAway,getGiveAways,getAllGiveAways,deleteAll,updateGiveAway} = require('../controllers/giveAwayController');
 
 
 const router = express.Router();
-
 router.get('/',getAllGiveAways );
+
+router.get('/:status',getGiveAways );
 
 router.post('/', createGiveAway );
 

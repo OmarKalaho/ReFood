@@ -42,9 +42,10 @@ const GiverPage = () => {
     zIndex: 1,
     bottom: "3vh",
   });
+  console.log(process.env.NEXT_PUBLIC_APP_API_URL);
 
   React.useEffect(() => {
-    fetch("http://localhost:4000/api/giveAways", { method: 'GET' })
+    fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'GET' })
       .then((response) => {
         if (response.ok) {
           return response.json();

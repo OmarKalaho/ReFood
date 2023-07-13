@@ -37,7 +37,7 @@ const TakerDialog = ({ handleAcceptClick, handleClose, open }) => {
                     <TextField
                         autoFocus
                         margin="dense"
-                        sx={{ ml: '50px' }}
+                        sx={{ ml:{xs:0,md:'50px'}}}
                         name="number"
                         label="Courier Phone Number"
                         type="text"

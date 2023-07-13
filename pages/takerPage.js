@@ -1,11 +1,17 @@
 import * as React from "react";
 import Head from "next/head";
 import Map from "../components/mapComp/map";
+import Snackbar from '@mui/material/Snackbar'
 import {
   DataGrid,
   GridRowsProp,
   GridColDef,
   GridToolbar,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 import { useDemoData } from "@mui/x-data-grid-generator";
 import Grid from "@mui/material/Grid";
@@ -17,6 +23,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import StyledDataGrid from "../components/takerPageComp/styledDataGrid";
 import Buttons from "../components/takerPageComp/acceptDeclineButtons";
 import Dialog from "../components/takerPageComp/takerDialog";
+import { Box } from "@mui/material";
+import DataGridCont from "../components/takerPageComp/dataGridCont";
+import ViewMenuButton from "../components/takerPageComp/viewMenuButton";
 dayjs.extend(relativeTime);
 
 
@@ -24,58 +33,17 @@ dayjs.extend(relativeTime);
 
 
 const TakerPage = () => {
-  const [mapCenter, setMapCenter] = React.useState({})
+  const [mapCenter, setMapCenter] = React.useState([])
   const [rows, setRows] = React.useState([]);
   const [acceptedRows, setAcceptedRows] = React.useState([]);
+  const [trashCanRows, setTrashCanRows] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [browId, bsetRowId] = React.useState(null);
-  const columns = React.useMemo(
-    () => [
-      {
-
-        field: "createdAt", headerName: "Time", width: 100,
-        valueGetter: ({ row }) => {
-
-          return new dayjs(row.createdAt).from(new dayjs());
-        }
-      },
-      {
-        field: "PickupLocation", headerName: "Location", width: 270,
-        valueGetter: ({ row }) => {
-
-          return row.PickupLocation.address;
-        }
-      },
-      {
-        field: "FoodQuantity", headerName: "Quantity", width: 70,
-        type: 'number',
-        valueGetter: ({ row }) => {
-
-          return row.FoodQuantity.InedibleFood.quantity || row.FoodQuantity.EdibleFood.quantity;
-        }
-      },
-      {
-        field: "FoodUnit", headerName: "Unit", width: 60,
-        valueGetter: ({ row }) => {
-
-          return row.FoodQuantity.InedibleFood.unit || row.FoodQuantity.EdibleFood.unit;
-        }
-      },
-      {
-        field: "PickupTime", headerName: "Due", width: 110, valueGetter: ({ row }) => {
-
-          return new dayjs(row.PickupTime).from(new dayjs());
-        }
-      },
-      {
-        field: "col6", headerName: "Actions", width: 80,
-        renderCell: (params) => ((<Buttons onAClick={handleClickOpen} />))
-      },
-      {
-        field: "ExtraRemarks", headerName: "Remarks", flex: 1,
-        minWidth: 170,
-      },
-    ], []);
+  const [tableView, setTableView] = React.useState("pendingTable");
+  let dataGridRows = rows;
+  if (tableView == "acceptedTable") {
+    dataGridRows = acceptedRows;
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -85,15 +53,13 @@ const TakerPage = () => {
     setOpen(false);
   };
 
-
-
-  const handleRowClick = (params,
+  const handleRowClick = React.useCallback((params,
     event,
     details,
   ) => {
-    setMapCenter(params.row.PickupLocation.latLng);
+    setMapCenter([params.row.PickupLocation.latLng]);
     bsetRowId(params.row._id);
-  }
+  });
 
   // const handleCellClick = (params,
   //   event,
@@ -102,39 +68,81 @@ const TakerPage = () => {
   //   console.log(params);
   // }
 
+  const handleTableViewChange = React.useCallback((table) => {
+    setTableView(table);
+  })
+
   const handleAcceptClick = (courierName, courierNumber) => {
     let newRows = rows.filter((row) => row._id !== browId)
     setRows(newRows);
-    let AcceptanceDetails={ courierName, courierNumber, organizationName: "Hefez al Nemah" };
-    let object = {AcceptanceStatus: "Accepted", AcceptanceDetails }
-    fetch("http://localhost:4000/api/giveAways/" + browId, 
-    { method: 'PATCH', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
+    let AcceptanceDetails = { courierName, courierNumber, organizationName: "Hefez al Nemah" };
+    let object = { AcceptanceStatus: "Accepted", AcceptanceDetails }
+    fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways` + browId,
+      { method: 'PATCH', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
       .then((response) => {
         if (response.ok) {
           return response.json();
         }
+      }).then(() => {
+        setAcceptedRows([...acceptedRows, rows.filter((row) => row._id === browId)[0]]);
+      }).catch(
 
-      }).then((data) => { console.log(data) })
-
+        console.log("error")
+      )
   }
 
+  React.useEffect(() => {
+    (async () => {
+      let response = await fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways/Pending`, { method: 'GET' });
+      let data = await response.json();
+      if (response.ok) {
+        if (data.length > 0) {
+          setRows(data);
+          setMapCenter([data[0].PickupLocation.latLng])
+        }
+      }
+
+    })();
+
+  }, []);
 
 
   React.useEffect(() => {
-    fetch("http://localhost:4000/api/giveAways", { method: 'GET' })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
+    (async () => {
+      let response = await fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways/Accepted`, { method: 'GET' })
+      let data = await response.json();
+      if (response.ok) {
+        if (data.length > 0) {
+          setAcceptedRows(data);
+          // setMapCenter(data.map((trashCan) => {
+          //  return trashCan.PickupLocation.latLng;
+          // })
+          // );
         }
-      })
-      .then((data) => {
-        console.log(data)
-        setRows(data);
-        setMapCenter(data[0].PickupLocation.latLng)
-      });
+      }
 
-
+    })();
   }, []);
+  React.useEffect(() => {
+    (async () => {
+      let response = await fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/foodTrashCans/`, { method: 'GET' })
+      let data = await response.json();
+      if (response.ok) {
+        if (data.length > 0) {
+          setTrashCanRows(data);
+          console.log(data,"data")
+          setMapCenter(data.map((trashCan) => {
+            trashCan.PickupLocation.latLng ;
+  
+          })
+          );
+        }
+      }
+
+    })();
+  }, []);
+
+
   return (
     <>
       <Head>
@@ -145,30 +153,15 @@ const TakerPage = () => {
       </Head>
       <Dialog open={open} handleClose={handleClose} handleAcceptClick={handleAcceptClick} />
       <Grid container
-        spacing={3} sx={{ marginTop: '8.5vh', height: '90vh', paddingX: '1.3em', paddingY: '0' }}
+        spacing={3} sx={{ marginTop: '10vh', height: '90vh', paddingX: '1.3em', paddingY: '0' }}
       >
         <Grid item xs={12} md={8} >
-          <StyledDataGrid
-            rows={rows}
-            columns={columns}
-            components={{
-              Toolbar: GridToolbar,
-            }}
-            getRowId={(row) => row._id}
-            getRowHeight={() => 'auto'}
-            onRowClick={handleRowClick}
-            // onCellClick={handleCellClick}
-            initialState={{
-              columns: {
-                columnVisibilityModel: {
-                  createdAt: false,
-                },
-              },
-            }}
-
-          // loading
-
-          />
+        <DataGridCont tableView={tableView} 
+        handleTableViewChange={handleTableViewChange} 
+        dataGridRows={dataGridRows}
+        handleRowClick={handleRowClick}
+        handleClickOpen={handleClickOpen}
+        trashCanRows= {trashCanRows} />
         </Grid>
         <Grid item xs={12} md={4} sx={{ marginTop: '4px' }}>
           <Map center={mapCenter} />

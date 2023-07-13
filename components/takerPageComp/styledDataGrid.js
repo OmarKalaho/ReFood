@@ -1,8 +1,5 @@
 import {
     DataGrid,
-    GridRowsProp,
-    GridColDef,
-    GridToolbar,
   } from "@mui/x-data-grid";
 
 import { styled } from '@mui/material/styles';
