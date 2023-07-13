@@ -1,6 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
-import Map from "../components/mapComp/map";
+import Map from "../components/mapComp/map"; 
 import Snackbar from '@mui/material/Snackbar'
 import {
   DataGrid,
