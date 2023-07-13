@@ -45,12 +45,12 @@ export default function Checkout({ tableRows, setTableRows }) {
       let data1;
       let data2;
       let object = { ...giveAwayData, FoodStatus: "Edible" };
-      fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'POST', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
+      fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'POST', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           if (response.ok) {
             response.json().then(data => { data1 = data });
             object = { ...giveAwayData, FoodStatus: "Inedible" }
-            fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'POST', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
+            fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'POST', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
               .then((response) => {
                 if (response.ok) {
                   return response.json();
@@ -66,7 +66,7 @@ export default function Checkout({ tableRows, setTableRows }) {
         }
         )
     } else {
-      fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'POST', body: JSON.stringify(giveAwayData), headers: { 'Content-Type': 'application/json' } })
+      fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'POST', body: JSON.stringify(giveAwayData), headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           if (response.ok) {
             return response.json();

@@ -45,7 +45,7 @@ const GiverPage = () => {
   console.log(process.env.NEXT_PUBLIC_APP_API_URL);
 
   React.useEffect(() => {
-    fetch(`http://${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'GET' })
+    fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'GET' })
       .then((response) => {
         if (response.ok) {
           return response.json();
