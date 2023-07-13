@@ -77,7 +77,7 @@ const TakerPage = () => {
     setRows(newRows);
     let AcceptanceDetails = { courierName, courierNumber, organizationName: "Hefez al Nemah" };
     let object = { AcceptanceStatus: "Accepted", AcceptanceDetails }
-    fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways` + browId,
+    fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways/` + browId,
       { method: 'PATCH', body: JSON.stringify(object), headers: { 'Content-Type': 'application/json' } })
       .then((response) => {
         if (response.ok) {
@@ -125,12 +125,11 @@ const TakerPage = () => {
   }, []);
   React.useEffect(() => {
     (async () => {
-      let response = await fetch(`{process.env.NEXT_PUBLIC_APP_API_URL}/foodTrashCans/`, { method: 'GET' })
+      let response = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/foodTrashCans/`, { method: 'GET' })
       let data = await response.json();
       if (response.ok) {
         if (data.length > 0) {
           setTrashCanRows(data);
-          console.log(data,"data")
           setMapCenter(data.map((trashCan) => {
             trashCan.PickupLocation.latLng ;
   

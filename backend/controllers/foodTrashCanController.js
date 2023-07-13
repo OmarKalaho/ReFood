@@ -16,7 +16,7 @@ const setFoodTrashCan = async (req, res) => {
     }
 };
 const getAllFoodTrashCans = async (req, res) => {
-    const foodTrashCans = await FoodTrashCan.find().sort({ TrashCanNumber: 1 });
+    const foodTrashCans = await FoodTrashCan.find().sort({ TrashCanNumber: 'asc' });
     res.status(200).json(foodTrashCans);
 }
 

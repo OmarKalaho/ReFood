@@ -19,6 +19,9 @@ import ViewMenuButton from "./viewMenuButton";
 import Box from '@mui/material/Box';
 import LoadBar from "../trashCanTableComp/loadBar";
 import ColorChip from "../trashCanTableComp/chip";
+import Buttons from "../takerPageComp/acceptDeclineButtons";
+
+
 dayjs.extend(relativeTime);
 
 const DataGridCont = ({ tableView, handleTableViewChange, dataGridRows,
