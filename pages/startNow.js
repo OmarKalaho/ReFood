@@ -19,7 +19,7 @@ import { useSignup } from "../hooks/useSignup"
 import image1 from "../public/images/image77.jpg";
 import Paper from "@mui/material/Paper";
 import Link from 'next/link';
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 
 function Copyright(props) {
@@ -42,7 +42,7 @@ function Copyright(props) {
 export default function SignUp() {
   const [userType,setUserType] = React.useState(null);
   const {signup, error, isLoading} = useSignup()
-  const router = useRouter()
+  // const router = useRouter()
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,7 +52,7 @@ export default function SignUp() {
       password: data.get('password'),
     });
     await signup(data.get('email'),data.get('password'),userType)
-    router.push('/signIn')
+    // router.push('/signIn')
 
   }
   

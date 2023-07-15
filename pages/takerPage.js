@@ -26,6 +26,8 @@ import Dialog from "../components/takerPageComp/takerDialog";
 import { Box } from "@mui/material";
 import DataGridCont from "../components/takerPageComp/dataGridCont";
 import ViewMenuButton from "../components/takerPageComp/viewMenuButton";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useRouter } from 'next/router';
 dayjs.extend(relativeTime);
 
 
@@ -40,6 +42,8 @@ const TakerPage = () => {
   const [open, setOpen] = React.useState(false);
   const [browId, bsetRowId] = React.useState(null);
   const [tableView, setTableView] = React.useState("pendingTable");
+  const {user} = useAuthContext();
+  const router = useRouter();
   let dataGridRows = rows;
   if (tableView == "acceptedTable") {
     dataGridRows = acceptedRows;
@@ -91,7 +95,8 @@ const TakerPage = () => {
       )
   }
 
-  React.useEffect(() => {
+  React.useEffect(
+    () => {
     (async () => {
       let response = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways/Pending`, { method: 'GET' });
       let data = await response.json();
@@ -103,6 +108,7 @@ const TakerPage = () => {
       }
 
     })();
+    
 
   }, []);
 
@@ -130,7 +136,9 @@ const TakerPage = () => {
       if (response.ok) {
         if (data.length > 0) {
           setTrashCanRows(data);
+          
           setMapCenter(data.map((trashCan) => {
+            console.log(trashCan);
             trashCan.PickupLocation.latLng ;
   
           })

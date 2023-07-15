@@ -39,7 +39,7 @@ const GiverPage = () => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const {user} = useAuthContext();
   const router = useRouter(); 
- 
+  
   console.log(user)
   const StyledFab = styled(Fab)({
     position: "fixed",
@@ -48,7 +48,7 @@ const GiverPage = () => {
   });
 
   React.useEffect(() => {
-   
+ 
   
     fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'GET' })
       .then((response) => {
@@ -59,6 +59,7 @@ const GiverPage = () => {
       .then((data) => {
         setTableRows(data)
       });
+     
   }, []);
 
   return (

@@ -42,4 +42,9 @@ const getAllUser = async (req, res) => {
   res.status(200).json(giveAways);
 }
 
-module.exports = { signupUser, loginUser,getAllUser}
+const deleteAllUser = async (req, res) => {
+  const result =  await User.deleteMany();
+    res.status(200).json(result);
+}
+
+module.exports = { signupUser, loginUser,getAllUser,deleteAllUser}

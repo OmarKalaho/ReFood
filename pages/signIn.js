@@ -16,7 +16,7 @@ import Image from "next/image";
 import Typography from "@mui/material/Typography";
 import image1 from "../public/images/image77.jpg";
 import { useLogin } from "../hooks/useLogin"
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 function Copyright(props) {
   return (
@@ -38,7 +38,7 @@ function Copyright(props) {
 
 export default function SignInSide() {
   const {login, error, isLoading} = useLogin()
-  const router = useRouter()
+  // const router = useRouter()
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -47,7 +47,7 @@ export default function SignInSide() {
       password: data.get("password"),
     });
     await login(data.get('email'),data.get('password'));
-    router.push('/')
+    // router.push('/')
   
   };
 
