@@ -13,9 +13,15 @@ import MenuItem from "@mui/material/MenuItem";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import { ColorModeContext, SignedInContext } from "../../util/context.js";
+import { ColorModeContext } from "../../util/context.js";
 import { green, deepPurple } from '@mui/material/colors';
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Logout"];
+import { useAuthContext } from '../../hooks/useAuthContext.js'
+import { useLogout } from "../../hooks/useLogout.js";
+import Link from 'next/link';
+
+
+
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -37,13 +43,19 @@ function ResponsiveAppBar() {
   };
   let pages = [];
   const colorMode = React.useContext(ColorModeContext);
-  const SignedInCont = React.useContext(SignedInContext);
+  const { user } = useAuthContext();
+  const {logout} = useLogout();
   const theme = useTheme();
 
-  if (SignedInCont.signedIn) {
-    pages = ["Home", "My Donations"];
+  if (user) {
+    if(user.userType=="Factory"|| user.userType=="Charity"){
+    pages = [{page:"Home",link:"/"}, {page:"My Donations",link:"/takerPage"}];
+    }
+    else{
+      pages = [{page:"Home",link:"/"}, {page:"My Donations",link:"/giverPage"}];
+    }
   } else {
-    pages = ["Home", "Sign In"];
+    pages = [{page:"Home",link:"/"}, {page:"Sign In",link:"/signIn"}];
   }
 
   return (
@@ -106,9 +118,11 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                 <Link href={page.link}>
+                <MenuItem key={page.page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.page}</Typography>
                 </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -131,14 +145,19 @@ function ResponsiveAppBar() {
             ReFood
           </Typography>
           <Box sx={{ mr: 2, flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map((page,index) => (
+              <>              
+              <Link href={page.link}>
               <Button
-                key={page}
+                key={index}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, display: "block" }}
               >
-                {page}
+                {page.page}
               </Button>
+              </Link>
+              </>
+
             ))}
           </Box>
 
@@ -163,11 +182,11 @@ function ResponsiveAppBar() {
               </IconButton>
             </Tooltip>
 
-            {SignedInCont.signedIn ? (
+            {user ? (
               <Tooltip title="Account settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ mx: 1 }}>
                   <Avatar sx={{width: 35, height: 35 }} >
-                    O
+                    {user.email[0]}
                   </Avatar>
                 </IconButton>
               </Tooltip>
@@ -189,7 +208,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={()=>{handleCloseUserMenu();logout()}}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

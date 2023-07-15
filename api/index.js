@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const giveAwayRoutes = require('./routes/giveAwayRoutes');
 const foodTrashCanRoutes = require('./routes/foodTrashCanRoutes');
+const userRoutes = require('./routes/userRoutes')
 
 const mongoose =require('mongoose');
 const app = express();
@@ -25,6 +26,7 @@ app.use((req,res,next)=>{
 
 app.use('/api/giveAways', giveAwayRoutes);
 app.use('/api/foodTrashCans',foodTrashCanRoutes);
+app.use('/api/user', userRoutes)
 
 app.get('/', (req, res) => { 
     res.json({ message: 'hello world' }) })

@@ -15,6 +15,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockRounded";
 import Image from "next/image";
 import Typography from "@mui/material/Typography";
 import image1 from "../public/images/image77.jpg";
+import { useLogin } from "../hooks/useLogin"
+import { useRouter } from 'next/router'
 
 function Copyright(props) {
   return (
@@ -35,13 +37,18 @@ function Copyright(props) {
 }
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
+  const {login, error, isLoading} = useLogin()
+  const router = useRouter()
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
     });
+    await login(data.get('email'),data.get('password'));
+    router.push('/')
+  
   };
 
   return (
@@ -133,7 +140,7 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/startNow" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
@@ -146,7 +153,6 @@ export default function SignInSide() {
           <Box
             sx={{
               height: "100%",
-
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

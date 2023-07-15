@@ -1,4 +1,5 @@
 import styles from "../../styles/Hero.module.css";
+import Link from "next/link";
 
 const Body = () => {
   return (
@@ -6,7 +7,7 @@ const Body = () => {
       Lets stop food waste and save the world! 
       Our goal is to connect
       Food Charities and Food Recycling Factories, with any Organization or Person that
-      has leftover food that they want to dispose. <a className={styles.a}>Start Now!</a>
+      has leftover food that they want to dispose.<Link href="/startNow"> <a className={styles.a}>Start Now!</a></Link>
     </p>
   );
 };

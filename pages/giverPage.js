@@ -24,7 +24,8 @@ import CardGiveAway from "../components/giveAwayComp/cardGiveAway";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import image1 from "../public/images/image457.png";
 import { useTheme } from '@mui/material/styles';
-
+import  { useRouter } from 'next/router';
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -36,15 +37,19 @@ const GiverPage = () => {
   const handleClose = () => setOpen(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const {user} = useAuthContext();
+  const router = useRouter(); 
+ 
+  console.log(user)
   const StyledFab = styled(Fab)({
     position: "fixed",
     zIndex: 1,
     bottom: "3vh",
   });
-  console.log(process.env.NEXT_PUBLIC_APP_API_URL);
 
   React.useEffect(() => {
+   
+  
     fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/giveAways`, { method: 'GET' })
       .then((response) => {
         if (response.ok) {

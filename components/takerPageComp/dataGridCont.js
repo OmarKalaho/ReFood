@@ -26,7 +26,6 @@ dayjs.extend(relativeTime);
 
 const DataGridCont = ({ tableView, handleTableViewChange, dataGridRows,
    handleClickOpen, handleRowClick, trashCanRows }) => {
-    console.log(trashCanRows);
   const columns = React.useMemo(
     () => [
       {
