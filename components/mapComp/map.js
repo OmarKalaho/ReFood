@@ -35,17 +35,17 @@ function Map({ center }) {
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={center[0]}
+      center={center}
       zoom={15}
       options={options}
       onLoad={onLoad}
       onClick={onclick}
 
     >
-      {center.map((item, index) => 
+      
       <MarkerF
-        position={item} key={index}
-      ></MarkerF>)}
+        position={center} 
+      ></MarkerF>
 
 
     </GoogleMap>

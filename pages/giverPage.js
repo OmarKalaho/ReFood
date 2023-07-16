@@ -26,6 +26,7 @@ import image1 from "../public/images/image457.png";
 import { useTheme } from '@mui/material/styles';
 import  { useRouter } from 'next/router';
 import { useAuthContext } from "../hooks/useAuthContext";
+import withAuth from "../hoc/withAuth";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -154,4 +155,4 @@ const GiverPage = () => {
     </>
   );
 };
-export default GiverPage;
+export default withAuth(GiverPage);

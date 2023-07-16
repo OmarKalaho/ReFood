@@ -28,6 +28,7 @@ import DataGridCont from "../components/takerPageComp/dataGridCont";
 import ViewMenuButton from "../components/takerPageComp/viewMenuButton";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useRouter } from 'next/router';
+import withAuth from "../hoc/withAuth";
 dayjs.extend(relativeTime);
 
 
@@ -35,7 +36,7 @@ dayjs.extend(relativeTime);
 
 
 const TakerPage = () => {
-  const [mapCenter, setMapCenter] = React.useState([])
+  const [mapCenter, setMapCenter] = React.useState({})
   const [rows, setRows] = React.useState([]);
   const [acceptedRows, setAcceptedRows] = React.useState([]);
   const [trashCanRows, setTrashCanRows] = React.useState([]);
@@ -61,7 +62,7 @@ const TakerPage = () => {
     event,
     details,
   ) => {
-    setMapCenter([params.row.PickupLocation.latLng]);
+    setMapCenter(params.row.PickupLocation.latLng);
     bsetRowId(params.row._id);
   });
 
@@ -103,7 +104,7 @@ const TakerPage = () => {
       if (response.ok) {
         if (data.length > 0) {
           setRows(data);
-          setMapCenter([data[0].PickupLocation.latLng])
+          setMapCenter(data[0].PickupLocation.latLng)
         }
       }
 
@@ -137,12 +138,12 @@ const TakerPage = () => {
         if (data.length > 0) {
           setTrashCanRows(data);
           
-          setMapCenter(data.map((trashCan) => {
-            console.log(trashCan);
-            trashCan.PickupLocation.latLng ;
+          // setMapCenter(data.map((trashCan) => {
+          //   console.log(trashCan);
+          //   trashCan.PickupLocation.latLng ;
   
-          })
-          );
+          // })
+          // );
         }
       }
 
@@ -178,4 +179,4 @@ const TakerPage = () => {
     </>
   );
 };
-export default TakerPage;
+export default withAuth(TakerPage);
